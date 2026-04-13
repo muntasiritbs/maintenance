@@ -1,0 +1,404 @@
+/* Responsive.css */
+
+/* Tablets (768px to 1024px) */
+@media (max-width: 1024px) {
+  .dashboard {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .dashboard-card {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .chart-container {
+    width: 100%;
+  }
+
+  #login-container {
+    width: 90%;
+    padding: 1rem;
+  }
+}
+
+/* Phones (less than 768px) */
+@media (max-width: 768px) {
+  .dashboard-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .dashboard-card {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  .card-value {
+    font-size: 1.2rem;
+  }
+
+  .slideshow .slide {
+    height: 200px;
+    background-size: cover;
+  }
+
+  #login-container {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .oj-panel {
+    padding: 1rem;
+  }
+
+  #loginButton {
+    width: 100%;
+  }
+}
+
+/* ========== Equipment Search Bar ========== */
+.equipment-search-bar,
+.equipment-search-input-container {
+  display: flex;
+  justify-content: center;  /* Centers horizontally */
+}
+
+.equipment-search-bar input,
+.equipment-search-input-container input {
+  width: 90%;
+  max-width: 500px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;  /* ensures padding included in width */
+}
+
+.equipment-search-bar input:focus,
+.equipment-search-input-container input:focus {
+  border-color: #007BFF;
+}
+
+
+/* ========== Card Container ========== */
+.equipment-card-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 10px 0;
+}
+
+/* ========== Equipment Card ========== */
+.equipment-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.equipment-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  border-color: #007BFF;
+}
+
+.equipment-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* ========== Text Content ========== */
+.equipment-name {
+  margin-bottom: 10px;
+  color: #007BFF;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.equipment-card p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #333;
+  text-align: center;
+}
+
+/* ========== Main Card Container ========== */
+.card-main-equipment {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto 50px;
+  padding: 20px;
+  background-color: #ffffffe6;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== Modal Styles ========== */
+.equipment-detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.equipment-modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* ========== Responsive Styles ========== */
+
+/* Tablets (768px - 1024px) */
+@media screen and (max-width: 1024px) {
+  .card-main-equipment {
+    padding: 16px;
+  }
+
+  .equipment-card {
+    padding: 16px;
+  }
+
+  .equipment-image {
+    height: 160px;
+  }
+
+  .equipment-modal-content {
+    padding: 1.5rem;
+  }
+}
+
+/* Mobile (less than 768px) */
+@media screen and (max-width: 768px) {
+  .equipment-search-bar input,
+  .equipment-search-input-container input {
+    width: 95%;
+    font-size: 0.95rem;
+  }
+
+  .equipment-name {
+    font-size: 1.1rem;
+  }
+
+  .equipment-card {
+    padding: 16px;
+  }
+
+  .equipment-image {
+    height: 140px;
+  }
+
+  .equipment-modal-content {
+    padding: 1rem;
+    max-height: 85vh;
+  }
+
+  .card-main-equipment {
+    padding: 16px;
+    margin-bottom: 30px;
+  }
+
+  .equipment-card-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .equipment-card p {
+    font-size: 0.85rem;
+  }
+}
+
+/* ===== Modal Overlay ===== */
+.equipment-detail-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2rem 1rem;
+  overflow-y: auto;
+}
+
+/* ===== Modal Box ===== */
+.equipment-modal-content {
+  background-color: #fff;
+  width: 100%;
+  max-width: 800px;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ===== Header ===== */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
+}
+
+.modal-header h1 {
+  font-size: 1.75rem;
+  color: #007BFF;
+  margin: 0;
+}
+
+.modal-header .close {
+  font-size: 1.75rem;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.modal-header .close:hover {
+  color: #333;
+}
+
+/* ===== Section Box ===== */
+.box {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.box h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #007BFF;
+}
+
+/* ===== Equipment Info Grid ===== */
+.equipment-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.equipment-info div {
+  line-height: 1.5;
+}
+
+/* ===== Service Cases ===== */
+.service-cases p {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+/* ===== User Manual ===== */
+.box a {
+  color: #007BFF;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.box a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Usage Input ===== */
+.usage-container input {
+  width: 100%;
+  padding: 0.6rem;
+  margin: 0.5rem 0 1rem;
+  font-size: 0.95rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.usage-container button {
+  background-color: #007BFF;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.usage-container button:hover {
+  background-color: #0056b3;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  .equipment-modal-content {
+    padding: 1.5rem;
+  }
+
+  .equipment-info {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .box h2 {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .equipment-modal-content {
+    padding: 1rem;
+  }
+
+  .modal-header h1 {
+    font-size: 1.25rem;
+  }
+
+  .modal-header .close {
+    font-size: 1.5rem;
+  }
+
+  .box {
+    padding: 1rem;
+  }
+
+  .equipment-info {
+    gap: 0.5rem;
+  }
+
+  .usage-container button {
+    width: 100%;
+  }
+}

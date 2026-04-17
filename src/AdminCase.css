@@ -1,0 +1,389 @@
+/* ============================================================
+   ADMIN CASE PAGE
+   ============================================================ */
+
+/* Admin page header badge */
+.admin-page-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fffbeb;
+  color: #c9a100;
+  border: 1.5px solid #fed7aa;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* Search bar */
+.admin-search-bar {
+  width: 100%;
+  max-width: 460px;
+  padding: 12px 16px;
+  font-size: 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  color: #0f172a;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.admin-search-bar:focus {
+  border-color: #f0c212;
+  box-shadow: 0 0 0 3px rgba(240, 194, 18, 0.12);
+}
+
+/* Admin case card — extends .case-card */
+.admin-case-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.04);
+  border: 1.5px solid #e2e8f0;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-case-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border-color: #fed7aa;
+}
+
+/* Card top section (info + image) */
+.admin-card-top {
+  display: flex;
+  gap: 14px;
+  padding: 16px 16px 12px;
+  align-items: flex-start;
+}
+
+.admin-case-image {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background: #f1f5f9;
+}
+
+.admin-case-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-case-info h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px;
+}
+
+.admin-case-info span {
+  display: block;
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.admin-case-info span b {
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Priority tag */
+.admin-priority-tag {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.admin-priority-tag.priority-high   { background: #fee2e2; color: #b91c1c; }
+.admin-priority-tag.priority-medium { background: #fef9c3; color: #854d0e; }
+.admin-priority-tag.priority-low    { background: #dcfce7; color: #166534; }
+
+/* Assign panel at the bottom of each card */
+.assign-panel {
+  border-top: 1.5px solid #f1f5f9;
+  padding: 14px 16px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.assign-panel-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.assign-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tech-select {
+  flex: 1;
+  padding: 9px 12px;
+  font-size: 13px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #0f172a;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: auto;
+}
+
+.tech-select:focus {
+  border-color: #f0c212;
+  box-shadow: 0 0 0 3px rgba(240, 194, 18, 0.12);
+}
+
+.assign-btn {
+  padding: 9px 16px;
+  background: linear-gradient(135deg, #f0c212, #c9a100);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.assign-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.assign-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Assigned / unassigned badge */
+.assigned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.assigned-badge.is-assigned {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.assigned-badge.not-assigned {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+/* Case container (re-use case-container grid) */
+.admin-case-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+  padding: 4px 0;
+}
+
+/* ============================================================
+   CASE DETAIL MODAL
+   ============================================================ */
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.admin-modal {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.22);
+  overflow: hidden;
+  flex-shrink: 0;
+  animation: modalSlideIn 0.22s ease;
+}
+
+@keyframes modalSlideIn {
+  from { opacity: 0; transform: translateY(-16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)  scale(1); }
+}
+
+/* Header */
+.admin-modal-header {
+  background: linear-gradient(135deg, #f0c212, #c9a100);
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.admin-modal-subtitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(0,0,0,.5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.admin-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.admin-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,.12);
+  color: #1a1a1a;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.18s;
+  padding: 0;
+  width: auto;
+  min-width: 34px;
+}
+
+.admin-modal-close:hover {
+  background: rgba(0,0,0,.22);
+}
+
+/* Body */
+.admin-modal-body {
+  padding: 20px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-modal-image-wrap {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.admin-modal-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0;
+  border: none;
+  display: block;
+}
+
+.admin-modal-section-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #c9a100;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid #f1f5f9;
+}
+
+.admin-modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.admin-modal-field {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.admin-modal-field--full {
+  grid-column: span 2;
+}
+
+.admin-modal-field-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.admin-modal-field-value {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #0f172a;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .admin-case-container {
+    grid-template-columns: 1fr;
+  }
+
+  .assign-row {
+    flex-direction: column;
+  }
+
+  .assign-btn {
+    width: 100%;
+  }
+}

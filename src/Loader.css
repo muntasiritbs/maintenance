@@ -1,81 +1,25 @@
-/* Wrapper overlay for the loader */
+/* Full-page loading overlay */
 .loader-wrapper {
-  position: fixed; /* overlay entire screen */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(33, 33, 33, 0.5); /* semi-transparent */
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(3px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9999;
 }
 
-/* The central loader container */
+/* Spinning ring */
 .loader {
-  width: 60px;
-  height: 40px;
-  position: relative;
-  background-color: transparent;
-}
-
-/* Outer spinning molecule */
-.loader::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 36px;
-  height: 36px;
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #ffffff;
   border-radius: 50%;
-  background-color: #fff;
-  background-image:
-    radial-gradient(circle 8px at 18px 18px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 4px at 18px 0px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 4px at 0px 18px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 4px at 36px 18px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 4px at 18px 36px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 4px at 30px 5px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 4px at 30px 30px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 4px at 5px 30px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 4px at 5px 5px, rgba(33, 33, 33, 0.5) 100%, transparent 0);
-  background-repeat: no-repeat;
-  box-sizing: border-box;
-  animation: rotationBack 3s linear infinite;
+  animation: spin 0.75s linear infinite;
 }
 
-/* Inner spinning molecule (smaller) */
-.loader::after {
-  content: '';
-  position: absolute;
-  left: 35px;
-  top: 15px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-color: #fff;
-  background-image:
-    radial-gradient(circle 5px at 12px 12px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 2.5px at 12px 0px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 2.5px at 0px 12px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 2.5px at 24px 12px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 2.5px at 12px 24px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 2.5px at 20px 3px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 2.5px at 20px 20px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 2.5px at 3px 20px, rgba(33, 33, 33, 0.5) 100%, transparent 0),
-    radial-gradient(circle 2.5px at 3px 3px, rgba(33, 33, 33, 0.5) 100%, transparent 0);
-  background-repeat: no-repeat;
-  box-sizing: border-box;
-  animation: rotationBack 4s linear infinite reverse;
-}
-
-/* Spin animation */
-@keyframes rotationBack {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(-360deg);
-  }
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

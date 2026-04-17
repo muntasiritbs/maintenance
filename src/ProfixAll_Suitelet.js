@@ -54,6 +54,12 @@ define([
         case 'getCases':
           result = getCases(input);
           break;
+        case 'getCasesAll':
+          result = getCasesAll(input);
+          break;
+        case 'getTechnicians':
+          result = getTechnicians(input);
+          break;
         case 'getEquipmentList':
           // Pass subsidiary parameter from frontend
           result = getEquipmentList(input.subsidiary);
@@ -78,6 +84,9 @@ define([
           break;
         case 'TASK_COMPLETED':
           result = markTaskAsCompleted(input);
+          break;
+        case 'assignTechnician':
+          result = assignTechnician(input);
           break;
         default:
           result = { success: false, error: `Unknown action: ${action}` };
@@ -114,6 +123,7 @@ define([
     const employeeId = employeeResult[0].getValue('internalid');
 
     const caseSearch = search.load({ id: 'customsearch_itbs_cmms_cases_mobile' });
+
     caseSearch.filters.push(search.createFilter({
       name: 'custrecord_itbs_cmms_technician',
       join: 'custrecord_itbs_cmms_case',
@@ -125,7 +135,11 @@ define([
     const results = [];
 
     resultSet.each(result => {
-      let image = '';
+
+      // ===============================
+      // 🔥 FIXED IMAGE LOGIC (SAME AS EQUIPMENT)
+      // ===============================
+      let image = null;
       const imageId = result.getValue({
         name: 'custrecord_itbs_cmms_equip_image',
         join: 'custevent_itbs_cmms_case_equipment'
@@ -134,7 +148,16 @@ define([
       if (imageId) {
         try {
           const fileObj = file.load({ id: imageId });
-          image = fileObj.url;
+          let fileUrl = fileObj.url;
+
+          // ensure public access
+          if (!fileUrl.includes('public=T')) {
+            fileUrl += (fileUrl.includes('?') ? '&' : '?') + 'public=T';
+          }
+
+          // 🔥 HARD CODED DOMAIN (same as your other function)
+          image = 'https://td3013433.app.netsuite.com' + fileUrl;
+
         } catch (err) {
           log.error('ImageLoadError', err);
         }
@@ -149,7 +172,7 @@ define([
         status: result.getText('status') || 'Not Available',
         statusValue: result.getValue('status') || 'Not Available',
         schedule: result.getValue('startdate'),
-        image,
+        image: image || null,
         location: result.getText('custevent_itbs_omn_case_location') || 'Not Available',
         equipmentSubsidiary: result.getText('subsidiary') || 'Not Available',
         makeModel: result.getText('custevent_itbs_cmms_case_make_model') || 'Not Available'
@@ -160,6 +183,70 @@ define([
 
     return results;
   }
+
+function getCasesAll(context) {
+  const caseSearch = search.load({ id: 'customsearch_itbs_cmms_cases_mobile' });
+
+  const resultSet = caseSearch.run();
+  const results = [];
+
+  resultSet.each(result => {
+
+    let image = null;
+
+    const imageId = result.getValue({
+      name: 'custrecord_itbs_cmms_equip_image',
+      join: 'custevent_itbs_cmms_case_equipment'
+    });
+
+    if (imageId) {
+      try {
+        const fileObj = file.load({ id: imageId });
+        let fileUrl = fileObj.url;
+
+        if (!fileUrl.includes('public=T')) {
+          fileUrl += (fileUrl.includes('?') ? '&' : '?') + 'public=T';
+        }
+
+        image = 'https://td3013433.app.netsuite.com' + fileUrl;
+
+      } catch (err) {
+        log.error('ImageLoadError', err);
+      }
+    }
+
+    // 🔥 Technician
+    const technician = result.getText({
+      name: "custrecord_itbs_cmms_technician",
+      join: "CUSTRECORD_ITBS_CMMS_CASE"
+    });
+
+    results.push({
+      // ✅ NEW FIELD (IMPORTANT)
+      caseId: result.getValue('internalid'),
+
+      caseNumber: result.getValue('casenumber'),
+      caseType: result.getText('custevent_itbs_case_type') || 'Not Available',
+      equipment: result.getText('custevent_itbs_cmms_case_equipment'),
+      subject: result.getValue('title'),
+      priority: result.getText('priority'),
+      status: result.getText('status') || 'Not Available',
+      statusValue: result.getValue('status') || 'Not Available',
+      schedule: result.getValue('startdate'),
+      image: image || null,
+
+      assignedTo: technician || null,
+
+      location: result.getText('custevent_itbs_omn_case_location') || 'Not Available',
+      equipmentSubsidiary: result.getText('subsidiary') || 'Not Available',
+      makeModel: result.getText('custevent_itbs_cmms_case_make_model') || 'Not Available'
+    });
+
+    return true;
+  });
+
+  return results;
+}
 
 // ----------- New Action: GET Case Details ------------
 function getCaseDetails(context) {
@@ -370,41 +457,41 @@ function getEquipmentBySubsidiaryName(context) {
     var manualSearch = search.load({ id: 'customsearch_itbs_equipment_all_sub' });
     var manualResults = manualSearch.run().getRange({ start: 0, end: 1000 });
     var manualData = {};
+
     manualResults.forEach(function (result) {
       var eqId = result.id;
       var fileUrl = result.getValue({ name: 'url', join: 'file' });
       if (eqId) manualData[eqId] = fileUrl;
     });
 
-    // 2. Get latest usage reading for each equipment (sorted by created date DESC)
+    // 2. Get latest usage reading
     var readingSearch = search.create({
       type: 'customrecord_itbs_equipment_usage',
       filters: [],
       columns: [
         search.createColumn({ name: 'custrecord_itbs_usage_equipment' }),
         search.createColumn({ name: 'custrecord_itbs_quip_usage' }),
-        search.createColumn({ name: 'created', sort: search.Sort.DESC }) // sort by newest
+        search.createColumn({ name: 'created', sort: search.Sort.DESC })
       ]
     });
 
     var readingResults = readingSearch.run().getRange({ start: 0, end: 1000 });
     var readingData = {};
 
-    // Iterate through reading results, ensuring only the latest reading for each equipment ID is saved
     readingResults.forEach(function (result) {
       var eqId = result.getValue('custrecord_itbs_usage_equipment');
-      if (eqId && !readingData[eqId]) {  // Only store the first/latest reading for each equipment
+
+      if (eqId && !readingData[eqId]) {
         readingData[eqId] = {
           reading: result.getValue('custrecord_itbs_quip_usage'),
-          created: result.getValue('created') // latest created date
+          created: result.getValue('created')
         };
       }
     });
 
-    // 3. Fetch equipment filtered by subsidiary (using saved search)
+    // 3. Equipment search
     var equipmentSearch = search.load({ id: 'customsearch_itbs_equipment_all_sub' });
 
-    // Add filter for subsidiary dynamically
     equipmentSearch.filters.push(
       search.createFilter({
         name: 'custrecord_itbs_cmms_equip_subsidiary',
@@ -413,7 +500,6 @@ function getEquipmentBySubsidiaryName(context) {
       })
     );
 
-    // Add filter to exclude inactive equipment
     equipmentSearch.filters.push(
       search.createFilter({
         name: 'isinactive',
@@ -425,32 +511,38 @@ function getEquipmentBySubsidiaryName(context) {
     var equipmentResults = equipmentSearch.run().getRange({ start: 0, end: 1000 });
     var results = [];
 
-    // Loop through the equipment results, but only return unique equipment (one card per equipment)
     equipmentResults.forEach(function (result) {
       var id = result.getValue('internalid');
-      
-      // Check if this equipment is already added to the results (in case it appears multiple times)
-      if (results.find(result => result.id === id)) {
-        return; // Skip this equipment if it has already been added
-      }
 
+      // prevent duplicates
+      if (results.find(function (r) { return r.id === id; })) return;
+
+      // ===============================
+      // 🔥 FIXED IMAGE URL (HARDCODED)
+      // ===============================
       var imageId = result.getValue('custrecord_itbs_cmms_equip_image');
       var imageUrl = null;
 
-      // Try loading image file URL
       if (imageId) {
         try {
           var fileObj = file.load({ id: imageId });
-          imageUrl = fileObj.url;
+          var fileUrl = fileObj.url;
+
+          // ensure public access
+          if (!fileUrl.includes('public=T')) {
+            fileUrl += (fileUrl.includes('?') ? '&' : '?') + 'public=T';
+          }
+
+          // 🔥 HARD CODED DOMAIN
+          imageUrl = 'https://td3013433.app.netsuite.com' + fileUrl;
+
         } catch (imgErr) {
           log.error({ title: 'Image Load Error', details: imgErr });
         }
       }
 
-      // Fetch the latest reading for this equipment from readingData
       var readingInfo = readingData[id] || {};
 
-      // Push the equipment result to display, including its latest reading
       results.push({
         id: id,
         name: result.getValue('name'),
@@ -461,8 +553,8 @@ function getEquipmentBySubsidiaryName(context) {
         operational: result.getText('custrecord_itbs_cmms_equip_operational') || 'N/A',
         created: result.getValue('created'),
         manual_url: manualData[id] || null,
-        reading_entered: readingInfo.reading || null,   // latest usage reading
-        reading_created: readingInfo.created || null,   // latest created date
+        reading_entered: readingInfo.reading || null,
+        reading_created: readingInfo.created || null,
         image_url: imageUrl || null,
         subsidiary_id: subsidiary,
         subsidiary_name: result.getText('custrecord_itbs_cmms_equip_subsidiary') || 'N/A'
@@ -471,14 +563,14 @@ function getEquipmentBySubsidiaryName(context) {
 
     return {
       success: true,
-      equipment: results,
+      equipment: results
     };
 
   } catch (e) {
     log.error('getEquipmentBySubsidiaryName failed', e);
     return {
       success: false,
-      error: e.message || 'An unexpected error occurred',
+      error: e.message || 'An unexpected error occurred'
     };
   }
 }
@@ -760,7 +852,7 @@ function submitCaseData(context) {
     const otherPayload = context.otherPayload;
     const caseNumber = imagePayload.caseNumber;
 
-    const signatureFolderId = 5064053;
+    const signatureFolderId = -4;
     let technicianFileId, supervisorFileId;
     let images = [];
 
@@ -883,6 +975,111 @@ function submitCaseData(context) {
   }
 }
 
+
+function getTechnicians(context) {
+  try {
+
+    const employeeSearchObj = search.create({
+      type: "employee",
+      filters: [
+        ["custentity_itbs_profix_access_role", "anyof", "1"]
+      ],
+      columns: [
+        search.createColumn({ name: "internalid" }),
+        search.createColumn({ name: "entityid", label: "Name" }),
+        search.createColumn({ name: "title", label: "Title" }),
+        search.createColumn({ name: "supervisor", label: "Supervisor" }),
+        search.createColumn({ name: "subsidiarynohierarchy", label: "Subsidiary (no hierarchy)" }),
+        search.createColumn({ name: "custentity_itbs_profix_subsidiary", label: "Profix Subsidiary" }),
+        search.createColumn({ name: "custentity_itbs_profix_access_role", label: "Profix Access Role" })
+      ]
+    });
+
+    const resultSet = employeeSearchObj.run();
+    const results = [];
+
+    resultSet.each(result => {
+
+      results.push({
+        id: result.getValue({ name: "internalid" }),
+        name: result.getValue({ name: "entityid" }) || 'Unknown',
+        title: result.getValue({ name: "title" }) || 'Not Available',
+        supervisor: result.getText({ name: "supervisor" }) || 'Not Available',
+        subsidiary: result.getText({ name: "subsidiarynohierarchy" }) || 'Not Available',
+        profixSubsidiary: result.getText({ name: "custentity_itbs_profix_subsidiary" }) || 'Not Available',
+        accessRole: result.getText({ name: "custentity_itbs_profix_access_role" }) || 'Not Available'
+      });
+
+      return true;
+    });
+
+    return {
+      success: true,
+      technicians: results
+    };
+
+  } catch (e) {
+    log.error("getTechnicians failed", e);
+    return {
+      success: false,
+      error: e.message || "Unexpected error"
+    };
+  }
+}
+
+function assignTechnician(context) {
+  try {
+    const caseId = Number(context.caseId);
+    const technicianId = Number(context.technicianId);
+
+    if (!caseId || !technicianId) {
+      return {
+        success: false,
+        error: "Missing caseId or technicianId"
+      };
+    }
+
+    // ✅ CREATE OMN Technician Trip record
+    const tripRec = record.create({
+      type: "customrecord_itbs_cmms_tech_time_alloca", // OMN Technician Trip
+      isDynamic: true
+    });
+
+    // 🔗 Link to Support Case
+    tripRec.setValue({
+      fieldId: "custrecord_itbs_cmms_case",
+      value: caseId
+    });
+ 
+    // 👨‍🔧 Set Technician
+    tripRec.setValue({
+      fieldId: "custrecord_itbs_cmms_technician",
+      value: technicianId
+    });
+
+    // (Optional but recommended if exists)
+    // tripRec.setValue({
+    //   fieldId: "custrecord_itbs_cmms_tech_date",
+    //   value: new Date()
+    // });
+
+    const tripId = tripRec.save();
+
+    return {
+      success: true,
+      message: "OMN Technician Trip created successfully",
+      tripId: tripId
+    };
+
+  } catch (e) {
+    log.error("assignTechnician error", e);
+
+    return {
+      success: false,
+      error: e.message
+    };
+  }
+}
 
 // ----------- New Action: POST Submit Usage Reading ------------
 function submitUsageReading(context) {

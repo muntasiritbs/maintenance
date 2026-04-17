@@ -6,6 +6,7 @@ import UsageReading from './UsageReading.jsx';
 import Equipment from './Equipment.jsx';
 import CameraCapture from './CameraCapture.jsx';
 import ServiceFormPopup from './ServiceFormPopup.jsx';
+import AdminCase from './AdminCase.jsx';
 import './App.css';
 import './Responsive.css';
 import './Loader.css'; // <-- Import only the CSS
@@ -24,7 +25,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        'https://7849230.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=5456&deploy=1&compid=7849230&ns-at=AAEJ7tMQBsLvJSdFFcengJNkK1f5hVGglp8kP7-6ahSdU2vnZFc',
+        'https://td3013433.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1539&deploy=1&compid=TD3013433&ns-at=AAEJ7tMQEhNi2Xc3CYav9k8_pPhSafeNmm4d0PEd1wLqu3szhZI',
         {
           method: 'POST',
           headers: {
@@ -45,6 +46,7 @@ function Login() {
         localStorage.setItem('userName', userName);
         localStorage.setItem('userRole', userRole);
         localStorage.setItem('userSubsidiary', userSubsidiary);
+        localStorage.setItem('userEmail', email);
         navigate('/dashboard'); // Removed alert
       } else {
         setError(data.message || 'Invalid email or password.');
@@ -58,74 +60,86 @@ function Login() {
   };
 
   return (
-  <div
-    style={{
+    <div style={{
       position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      backgroundImage:
-        'url("https://7849230.app.netsuite.com/core/media/media.nl?id=5349155&c=7849230&h=xbdTIx1gRp978-yLu7rYHSnTXHsZjpYtyFPQV3s0HtAZexAz")',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
+      top: 0, left: 0,
+      width: '100vw', height: '100vh',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-    }}
-  >
-    {/* Login Form (always rendered) */}
-    <div id="login-container">
-      <div className="oj-panel">
-        <img
-          src="https://7849230.app.netsuite.com/core/media/media.nl?id=5349154&c=7849230&h=r8r6Q3QLdsL7iVZ7rIzrM0Cuz4Z-M9vDLr6bcPgTurpep_bU"
-          alt="Profix Logo"
-        />
-        <h2 className="login-page-box-title">Log In</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Employee email address"
-              required
-              disabled={loading}
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-              disabled={loading}
-            />
-          </div>
-          {error && <div className="error-message">{error}</div>}
-          <button type="submit" id="loginButton" disabled={loading}>
-            Log In
-          </button>
-        </form>
-        <p className="oj-text-secondary-color forgot-password">
-          Forgot Password? <a href="#">Reset password</a>
-        </p>
-      </div>
-      <div className="login-page-footer">
-        Copyright © ITelligence Business Solutions
-      </div>
-    </div>
+      overflow: 'hidden',
+    }}>
+      {/* Layer 1 — Construction photo, blurred */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage:
+          'url("https://td3013433.app.netsuite.com/core/media/media.nl?id=8227&c=TD3013433&h=NYw_atLMhGbIOLivrv4exEQ73ZoXxQAhXGiNwdz0OfK0R0FT")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        filter: 'blur(1px)',
+        transform: 'scale(1.08)',
+      }} />
 
-    {/* Loader as overlay (conditionally rendered) */}
-    {loading && (
-      <div className="loader-wrapper">
-        <div className="loader"></div>
+      {/* Layer 2 — Orange construction tint */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background:
+          'linear-gradient(135deg, rgba(249,115,22,0.55) 0%, rgba(194,65,12,0.65) 60%, rgba(28,25,23,0.75) 100%)',
+      }} />
+
+      {/* Layer 3 — Login form (sharp, above blur) */}
+      <div id="login-container" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="oj-panel">
+          <img
+            src="https://td3013433.app.netsuite.com/core/media/media.nl?id=8189&c=TD3013433&h=dJaok088VJE8_iB3MvKf8PdJCZ1AGrhPFGB6J-J8c0L3iWRW"
+            alt="Profix Logo"
+          />
+          <h2 className="login-page-box-title">Log In</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email address"
+                required
+                disabled={loading}
+              />
+            </div>
+            <div className="form-group">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                required
+                disabled={loading}
+              />
+            </div>
+            {error && <div className="error-message">{error}</div>}
+            <button type="submit" id="loginButton" disabled={loading}>
+              Log In
+            </button>
+          </form>
+          <p className="oj-text-secondary-color forgot-password">
+            Forgot Password? <a href="#">Reset password</a>
+          </p>
+        </div>
+        <div className="login-page-footer">
+          Copyright © ITelligence Business Solutions
+        </div>
       </div>
-    )}
-  </div>
-);
+
+      {/* Loader overlay */}
+      {loading && (
+        <div className="loader-wrapper">
+          <div className="loader"></div>
+        </div>
+      )}
+    </div>
+  );
 
 }
 
@@ -140,6 +154,7 @@ function App() {
         <Route path="/usagereading" element={<UsageReading />} />
         <Route path="/equipment" element={<Equipment />} />
         <Route path="/camera" element={<CameraCapture />} />
+        <Route path="/admin" element={<AdminCase />} />
       </Routes>
     </HashRouter>
   );

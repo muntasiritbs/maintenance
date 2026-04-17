@@ -1,74 +1,136 @@
+/* ============================================================
+   CASE CARDS
+   ============================================================ */
+
+/* Filter chip row */
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filter-btn {
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 20px;
+  background: #fff;
+  color: #475569;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: #f0c212;
+  color: #f0c212;
+  background: #fffbeb;
+}
+
+.filter-btn.active-filter {
+  background: #f0c212;
+  border-color: #f0c212;
+  color: #fff;
+}
+
+/* ---- Case list ---- */
 .case-container {
   width: 100%;
-  max-width: 900px;
+  max-width: 920px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .case-card {
   display: flex;
-  align-items: center;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  align-items: flex-start;
+  background: #fff;
+  padding: 18px 20px;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+  border: 1.5px solid transparent;
   position: relative;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  gap: 16px;
 }
 
 .case-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,.1);
+  border-color: #f0c212;
 }
 
+/* Priority badge */
 .priority-tag {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: #fff;
-  font-weight: bold;
-  font-size: 0.8em;
+  top: 14px;
+  right: 14px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.priority-high {
-  background-color: #ff5c5c;
-}
+.priority-high   { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+.priority-medium { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
+.priority-low    { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
 
-.priority-medium {
-  background-color: #ffc107;
-}
-
-.priority-low {
-  background-color: #28a745;
-}
-
+/* Equipment thumbnail */
 .case-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin-right: 20px;
-  background-color: #e0e0e0;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
   object-fit: cover;
-  border: 2px solid #ddd;
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
+/* Case info */
 .case-details {
   display: flex;
   flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  padding-right: 80px;
 }
 
 .case-details h3 {
-  margin: 0;
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-bottom: 10px;
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
 }
 
 .case-details span {
-  font-size: 0.9em;
-  color: #555;
+  font-size: 12.5px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.case-details span b {
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Empty / error states */
+.state-message {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 14px;
+  padding: 40px 20px;
+}
+
+@media (max-width: 600px) {
+  .case-details { padding-right: 60px; }
+  .case-card { padding: 14px 14px; }
 }

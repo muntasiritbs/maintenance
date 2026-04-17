@@ -21,6 +21,8 @@ function Equipment() {
   const userName = localStorage.getItem('userName') || 'Guest';
   const userRole = localStorage.getItem('userRole') || 'Visitor';
   const userSubsidiary = localStorage.getItem('userSubsidiary');
+  const userEmail = localStorage.getItem('userEmail') || '';
+  const userInitials = userName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
   const toggleSidebar = () => setIsSidebarVisible(prev => !prev);
 
@@ -36,7 +38,7 @@ function Equipment() {
     }
 
     setLoading(true);
-    const url = `https://7849230.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=5457&deploy=1&compid=7849230&ns-at=AAEJ7tMQQOlA8RVXNbv39719DUxVi8Hob6HtiOnc6_Em-Zq1y-U&action=getEquipmentBySubsidiaryName&subsidiary=${encodeURIComponent(userSubsidiary)}`;
+    const url = `https://td3013433.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1540&deploy=1&compid=TD3013433&ns-at=AAEJ7tMQkKcbBbXxk_5prafJV5M2mxtXQHbKbzZP68uPBBDy1Zc&action=getEquipmentBySubsidiaryName&subsidiary=${encodeURIComponent(userSubsidiary)}`;
 
     fetch(url, {
       method: 'GET',
@@ -74,7 +76,7 @@ const handleSaveUsage = () => {
     readingTimestamp: new Date().toISOString()
   };
 
-  fetch('https://7849230.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=5457&deploy=1&compid=7849230&ns-at=AAEJ7tMQQOlA8RVXNbv39719DUxVi8Hob6HtiOnc6_Em-Zq1y-U', {
+  fetch('https://td3013433.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1540&deploy=1&compid=TD3013433&ns-at=AAEJ7tMQkKcbBbXxk_5prafJV5M2mxtXQHbKbzZP68uPBBDy1Zc', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -103,7 +105,7 @@ const handleSaveUsage = () => {
   setSelectedEquipment(equipment);
   setServiceCases([]); // Clear previous
 
-  fetch(`https://7849230.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=5457&deploy=1&compid=7849230&ns-at=AAEJ7tMQQOlA8RVXNbv39719DUxVi8Hob6HtiOnc6_Em-Zq1y-U&action=getLast10CasesByEquipmentId&equipmentId=${equipment.id}`)
+  fetch(`https://td3013433.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1540&deploy=1&compid=TD3013433&ns-at=AAEJ7tMQkKcbBbXxk_5prafJV5M2mxtXQHbKbzZP68uPBBDy1Zc&action=getLast10CasesByEquipmentId&equipmentId=${equipment.id}`)
     .then(res => res.json())
     .then(data => {
       if (data.success) {
@@ -153,19 +155,18 @@ const handleSaveUsage = () => {
           </div>
           <div className="group-two">
             <img
-              src="https://7849230.app.netsuite.com/core/media/media.nl?id=5349151&c=7849230&h=lOs1Nqhu2aEuvCVFxDsUy-U3YE3fMoRcSn3aSJi_A6qyFJ-m"
+              src="https://7849230.app.netsuite.com/core/media/media.nl?id=5349153&c=7849230&h=Wnp2-mOwvlhQYw9AxlcHwS3d2i2EmBAghRqJ037KL1cdycun"
               alt="Company Logo"
               className="company-logo"
             />
             <div className="portal-title">
               <img
-                src="https://7849230.app.netsuite.com/core/media/media.nl?id=5349154&c=7849230&h=r8r6Q3QLdsL7iVZ7rIzrM0Cuz4Z-M9vDLr6bcPgTurpep_bU"
-                alt="Profix Logo"
+                src="https://td3013433.app.netsuite.com/core/media/media.nl?id=8189&c=TD3013433&h=dJaok088VJE8_iB3MvKf8PdJCZ1AGrhPFGB6J-J8c0L3iWRW"
                 className="portal-logo"
               />
             </div>
             <div className="user-info">
-              Signed in: {userName}<br />
+              Signed in: {userName} ({userRole})<br />
             </div>
           </div>
         </div>
@@ -179,11 +180,23 @@ const handleSaveUsage = () => {
         </div>
         <ul className="sidebar-content">
           <li><a href="#dashboard">Dashboard</a></li>
-          <li><a href="#case">Cases</a></li>
+          <li><a href="#case">Work Orders</a></li>
           <li><a href="#equipment">Equipments</a></li>
           <li><a href="#usagereading">Usage Reading</a></li>
-          <li><button onClick={handleLogout}>Logout</button></li>
+          {(userRole.toLowerCase() === 'administrator' || userRole.toLowerCase() === 'admin') && (
+            <li><a href="#admin">Admin Work Orders</a></li>
+          )}
         </ul>
+        <div className="sidebar-user-footer">
+          <div className="sidebar-user-info">
+            <div className="sidebar-user-avatar">{userInitials}</div>
+            <div className="sidebar-user-text">
+              <span className="sidebar-user-name">{userName}</span>
+              <span className="sidebar-user-email">{userEmail}</span>
+            </div>
+          </div>
+          <button className="sidebar-logout-btn" onClick={handleLogout}>Logout</button>
+        </div>
       </div>
 
       {isSidebarVisible && <div className="sidebar-backdrop" onClick={toggleSidebar}></div>}
@@ -209,9 +222,11 @@ const handleSaveUsage = () => {
   <div className="equipment-card-wrapper">
 {filteredEquipment.map((eq, idx) => (
   <div key={idx} className="equipment-card" onClick={() => openModal(eq)}>
-    {eq.image_url && (
-      <img src={eq.image_url} alt={eq.name} className="equipment-image" />
-    )}
+    <img
+      src={eq.image_url || 'https://via.placeholder.com/240x150?text=No+Image'}
+      alt={eq.name}
+      className="equipment-image"
+    />
     <h3 className="equipment-name">{eq.name || 'N/A'}</h3>
     <p><strong>Make/Model:</strong> {eq.make_model || 'N/A'}</p>
     <p><strong>Location:</strong> {eq.location || 'N/A'}</p>
@@ -312,7 +327,7 @@ const handleSaveUsage = () => {
       <div className="footer">
         <div className="footer-logo">
           <img
-            src="https://7849230.app.netsuite.com/core/media/media.nl?id=5349153&c=7849230&h=Wnp2-mOwvlhQYw9AxlcHwS3d2i2EmBAghRqJ037KL1cdycun"
+            src="https://7849230.app.netsuite.com/core/media/media.nl?id=5349151&c=7849230&h=lOs1Nqhu2aEuvCVFxDsUy-U3YE3fMoRcSn3aSJi_A6qyFJ-m"
             alt="Oracle NetSuite Logo"
             className="netsuite-logo"
           />

@@ -1,343 +1,251 @@
-/* Dashboard Container */
+/* ============================================================
+   DASHBOARD — stat cards, chart, usage reading, shared page layout
+   ============================================================ */
+
+/* Outer wrapper used by Case, Equipment, UsageReading pages */
+.card-main-equipment {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto 80px;
+}
+
+/* ---- Dashboard grid ---- */
 .dashboard {
-  max-width: 900px;
+  max-width: 960px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 20px;
-  padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9);
-  text-align: center;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
-.card-main {
-    width: 750px;
-    margin: 0px auto 50px;
-}
-.card-main{
-    grid-gap: 20px;
-    padding: 20px;
-    background-color: #ffffffe6;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px #0003;
-}
-
-/* Title */
 .dashboard-title {
-  grid-column: span 2;
-  font-size: 24px;
-  font-weight: bold;
-  text-align: center;
-  color: #000000;
-  margin-bottom: 30px;
+  grid-column: span 3;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 4px;
+  letter-spacing: -0.015em;
 }
 
-/* Cards */
+/* ---- KPI Cards ---- */
 .dashboard-card {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 22px 20px 18px;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e2e8f0;
 }
 
+.dashboard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.1);
+}
+
+/* Coloured top accent stripe */
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 16px 16px 0 0;
+}
+
+.dashboard-card.card-success::before { background: #22c55e; }
+.dashboard-card.card-info::before    { background: #3b82f6; }
+.dashboard-card.card-danger::before  { background: #ef4444; }
+
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.card-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-icon-green  { background: #dcfce7; }
+.card-icon-blue   { background: #dbeafe; }
+.card-icon-red    { background: #fee2e2; }
+
 .card-title {
-  font-size: 18px;
+  font-size: 11.5px;
   font-weight: 600;
-  color: #000000;
-  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #64748b;
+  margin-bottom: 0;
 }
 
 .card-value {
-  font-size: 32px;
-  font-weight: bold;
-  color: #000000;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-top: 4px;
 }
 
-/* Slideshow */
-.slideshow {
-  position: relative;
-  width: 100%;
-  height: 150px;
-  overflow: hidden;
-  border-radius: 8px;
-  background-color: #e0e6ed;
-}
-
-.slide {
-  display: none;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-}
-
-.slide.active {
-  display: block;
-}
-
-/* Chart */
+/* ---- Bar chart (desktop: 2 of 3 cols) ---- */
 .chart-container {
   grid-column: span 2;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07);
+  border: 1px solid #e2e8f0;
 }
 
-canvas {
-  max-width: 100%;
+/* ---- Doughnut chart (desktop: 1 of 3 cols) ---- */
+.pie-chart-container {
+  grid-column: span 1;
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  position: relative;
 }
 
+.pie-chart-container canvas {
+  max-height: 100%;
+}
 
-/* USAGE READING */
+canvas { max-width: 100%; }
+
+/* ---- Usage Reading form ---- */
 .mileage-container {
-    width: 100%;
-    max-width: 600px;
-    background-color: #ffffff;
-    padding: 24px 32px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
-    color: #262626;
+  width: 100%;
+  max-width: 560px;
+  background: #fff;
+  padding: 28px 32px;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07);
+  border: 1px solid #e2e8f0;
+  margin: 0 auto;
+  color: #0f172a;
 }
 
 .mileage-container h2 {
-    font-size: 22px;
-    margin-bottom: 24px;
-    color: #000000;
-    text-align: center;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #0f172a;
+  text-align: center;
 }
 
-.form-group {
-    margin-bottom: 16px;
-}
+.form-group { margin-bottom: 18px; }
 
-label {
-    display: block;
-    font-size: 14px;
-    color: black;
-    margin-bottom: 6px;
-}
-
-input[type="text"],
-input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #d0d0d0;
-    border-radius: 4px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus {
-    border-color: #0076d1;
-}
-
-.searchable-dropdown {
-    position: relative;
-}
+.searchable-dropdown { position: relative; }
 
 .dropdown-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: #fff;
-    border: 1px solid #d0d0d0;
-    border-radius: 4px;
-    max-height: 150px;
-    overflow-y: auto;
-    z-index: 10;
-    display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+  display: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
 }
 
 .dropdown-item {
-    padding: 10px;
-    cursor: pointer;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+  transition: background 0.15s;
 }
 
 .dropdown-item:hover {
-    background-color: #0076d1;
-    color: #fff;
+  background: #f0f9ff;
+  color: #f0c212;
 }
 
+/* Shared action button */
 .btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    background-color: #000000;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s;
+  width: 100%;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #f0c212, #c9a100);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 8px;
+  letter-spacing: 0.03em;
+  transition: opacity 0.2s, transform 0.15s;
+  font-family: inherit;
 }
 
 .btn:hover {
-    background-color: #005cb9;
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .timestamp-display {
-    font-size: 14px;
-    color: #333;
-    margin-top: 20px;
-    font-weight: bold;
-}
-
-/* SERVICE FORM */
-
-form#service-form {
-  max-width: 800px;
-  margin-top: 1rem;
-}
-
-form#service-form fieldset {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 5px;
-}
-
-form#service-form legend {
-  font-weight: bold;
-  padding: 0 0.5rem;
-}
-
-.task-part-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.task-part-row label {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.9rem;
-}
-
-.signature-pad {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-  background-color: #f9f9f9;
-}
-
-button[type="submit"] {
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  background-color: #0066cc;
-  border: none;
-  color: white;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button[type="submit"]:hover {
-  background-color: #004999;
-}
-
-/* EQUIPMENT CSS */
-.service-form-popup {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 1.5rem 2rem;
-  background: #f7f9fc;
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 12px;
+  font-weight: 500;
+  padding: 10px 14px;
+  background: #f8fafc;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
 }
 
-.service-form-popup h2 {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: #007bff;
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* Tablet — 2-col cards, charts side by side still fits */
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-title      { grid-column: span 2; }
+  .chart-container      { grid-column: span 2; }
+  .pie-chart-container  { grid-column: span 2; min-height: 220px; }
 }
 
-.service-form-popup p {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-}
+/* Mobile — 2×2 card grid, charts full-width and stacked */
+@media (max-width: 600px) {
+  .dashboard {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
 
-.form-section {
-  margin-bottom: 1.5rem;
-}
+  /* Title spans both columns */
+  .dashboard-title { grid-column: span 2; }
 
-.form-section h3 {
-  margin-bottom: 0.75rem;
-  color: #333;
-}
+  /* 3 stat cards: 2 per row → row 1: Completed | Total, row 2: Pending (full-width) */
+  .dashboard-card { /* natural 1-col placement gives 2-per-row */ }
+  .dashboard-card:nth-child(4) { grid-column: span 2; } /* 3rd card (4th child after title) fills row */
 
-.form-section label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #555;
-}
+  /* Charts full-width below */
+  .chart-container      { grid-column: span 2; }
+  .pie-chart-container  { grid-column: span 2; min-height: 260px; }
 
-.form-section textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  resize: vertical;
-  font-size: 1rem;
-}
-
-.signature-canvas {
-  border: 1px solid #ccc;
-  width: 100%;
-  height: 150px;
-  border-radius: 4px;
-}
-
-.clear-btn {
-  margin-top: 0.5rem;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.clear-btn:hover {
-  background-color: #c82333;
-}
-
-.submit-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  margin-right: 1rem;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.submit-btn:hover {
-  background-color: #0056b3;
-}
-
-.cancel-btn {
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 1rem;
-}
-
-.cancel-btn:hover {
-  background-color: #5a6268;
+  .mileage-container { padding: 20px 18px; }
 }

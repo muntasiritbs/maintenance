@@ -122,7 +122,7 @@ const ServiceFormPopup = () => {
   const fetchDetails = async (caseNumber, username) => {
     setLoading(true);
     try {
-      const url = `https://7849230.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=5457&deploy=1&compid=7849230&ns-at=AAEJ7tMQQOlA8RVXNbv39719DUxVi8Hob6HtiOnc6_Em-Zq1y-U&action=getCaseDetails&username=${encodeURIComponent(
+      const url = `https://td3013433.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1540&deploy=1&compid=TD3013433&ns-at=AAEJ7tMQkKcbBbXxk_5prafJV5M2mxtXQHbKbzZP68uPBBDy1Zc&action=getCaseDetails&username=${encodeURIComponent(
         username
       )}&caseNumber=${encodeURIComponent(caseNumber)}`;
 
@@ -155,7 +155,7 @@ const ServiceFormPopup = () => {
 
     try {
       await fetch(
-        "https://7849230.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=5457&deploy=1&compid=7849230&ns-at=AAEJ7tMQQOlA8RVXNbv39719DUxVi8Hob6HtiOnc6_Em-Zq1y-U",
+        "https://td3013433.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1540&deploy=1&compid=TD3013433&ns-at=AAEJ7tMQkKcbBbXxk_5prafJV5M2mxtXQHbKbzZP68uPBBDy1Zc",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -225,7 +225,7 @@ const ServiceFormPopup = () => {
     setLoading(true);
 
     fetch(
-      "https://7849230.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=5457&deploy=1&compid=7849230&ns-at=AAEJ7tMQQOlA8RVXNbv39719DUxVi8Hob6HtiOnc6_Em-Zq1y-U",
+      "https://td3013433.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1540&deploy=1&compid=TD3013433&ns-at=AAEJ7tMQkKcbBbXxk_5prafJV5M2mxtXQHbKbzZP68uPBBDy1Zc",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -385,7 +385,7 @@ const ServiceFormPopup = () => {
 
     try {
       const res = await fetch(
-        "https://7849230.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=5457&deploy=1&compid=7849230&ns-at=AAEJ7tMQQOlA8RVXNbv39719DUxVi8Hob6HtiOnc6_Em-Zq1y-U",
+        "https://td3013433.extforms.netsuite.com/app/site/hosting/scriptlet.nl?script=1540&deploy=1&compid=TD3013433&ns-at=AAEJ7tMQkKcbBbXxk_5prafJV5M2mxtXQHbKbzZP68uPBBDy1Zc",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -410,32 +410,26 @@ const ServiceFormPopup = () => {
   // RENDER -------------------------------------------------------------
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "20px",
-      }}
-    >
+    <div className="service-form-page">
       <div className="form-container">
         {loading && <Loader />}
 
-        <button
-          className="close-button"
-          onClick={() => window.history.back()}
-        >
-          ×
-        </button>
+        <div className="form-header">
+          <h1>Service Report Form</h1>
+          <button
+            className="close-button"
+            onClick={() => window.history.back()}
+          >
+            ×
+          </button>
+        </div>
 
-        <h1>Service Report Form</h1>
-
+        <div className="form-body">
         <form onSubmit={handleSubmit}>
           {/* Case Details */}
           <div className="info-grid">
             <div className="info-item">
-              Case Number <br />
+              Work Orders Number <br />
               <strong>{caseDetails?.caseNumber ?? "Not Available"}</strong>
             </div>
 
@@ -798,10 +792,11 @@ const ServiceFormPopup = () => {
 
           <hr />
 
-          <button type="submit" disabled={loading}>
+          <button type="submit" className="submit-btn" disabled={loading}>
             Submit
           </button>
         </form>
+        </div> {/* form-body */}
       </div>
     </div>
   );
